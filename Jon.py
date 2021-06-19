@@ -69,7 +69,7 @@ if value == "Main App":
         gray=cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
         a=0
         try:
-        faces = face_cascade.detectMultiScale(gray, 1.3, 5)
+          faces = face_cascade.detectMultiScale(gray, 1.3, 5)
           if faces is not None:
             a=1
  
