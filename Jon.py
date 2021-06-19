@@ -64,9 +64,27 @@ if value == "Main App":
         image = np.asarray(image)
         image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         image_expanded = np.expand_dims(image_rgb, axis=0)
-
-        # The input needs to be a tensor, convert it using `tf.convert_to_tensor`.
-        input_tensor = tf.convert_to_tensor(image)
+        # reducing background noise by trying to detect face and processing object detection in that area only
+        face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+        gray=cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
+        a=0
+        try:
+        faces = face_cascade.detectMultiScale(gray, 1.3, 5)
+          if faces is not None:
+            a=1
+ 
+        except:
+          pass
+        #checking if faces are detected
+        if a==1:
+          x,y,w,h = faces
+          roi = image[y:y+h,x:x+w]
+          # The input needs to be a tensor, convert it using `tf.convert_to_tensor`.
+          input_tensor = tf.convert_to_tensor(roi)
+        #executing else command if faces are not detected
+        else:
+          # The input needs to be a tensor, convert it using `tf.convert_to_tensor`.
+          input_tensor = tf.convert_to_tensor(image)
         # The model expects a batch of images, so add an axis with `tf.newaxis`.
         input_tensor = input_tensor[tf.newaxis, ...]
 
